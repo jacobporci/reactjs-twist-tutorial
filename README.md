@@ -19,9 +19,13 @@
 - Framework
   - NextJS ([create-next-app](https://nextjs.org/docs/pages/api-reference/create-next-app))
 
-## Exercise 1 - Pages
+# Learn as you code
 
-1. Create a boilerplate using [create-next-app](https://nextjs.org/docs/pages/api-reference/create-next-app)
+## Prerequisites
+
+Create a boilerplate using [create-next-app](https://nextjs.org/docs/pages/api-reference/create-next-app)
+
+## Exercise 1 - Pages
 
 ### Pages
 
@@ -36,10 +40,10 @@
      );
    }
    ```
-   - **pages** folder servers as routing for NextJS
+   - `pages`` folder servers as routing for NextJS
    - `index.tsx` always serves as the displayed page in the route
    - it's important to **ALWAYS** use `export default` in page components (otherwise NextJS will not see it as a page)
-3. Create another folder inside **pages** named `twist` and another `index.tsx` under `src/pages/twist` with content:
+3. Create another folder inside `pages` named `twist` and another `index.tsx` under `src/pages/twist` with content:
    ```javascript
    export default function Twist() {
      return (
