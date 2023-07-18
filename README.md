@@ -97,7 +97,7 @@ Create a boilerplate using [create-next-app](https://nextjs.org/docs/pages/api-r
 
 2. Try clicking the links at the top of your webpage to see how it works
 
-### Exercise 2 - Components
+## Exercise 2 - Components
 
 1. Create a `components` folder inside `src`
 2. Create a file named `button.tsx` inside `src/components` with content:
@@ -116,7 +116,7 @@ Create a boilerplate using [create-next-app](https://nextjs.org/docs/pages/api-r
    - NextJS handles **aliased imports**
      - `@/components/whatever`
 
-### Exercise 3 - State and Props
+## Exercise 3 - State and Props
 
 1. In your Home page file(`src/pages/index.tsx`), create a state to count the number of times a button is clicked
    - place it above the `return` statement
@@ -142,7 +142,162 @@ Create a boilerplate using [create-next-app](https://nextjs.org/docs/pages/api-r
    ```
 
 5. Go back to `src/pages/index.tsx` and assign the `setClicks` method to your button's `onClick` prop, and show the `clicks` state above the button
+
    ```javascript
     <p>Clicks: {clicks}</p>
     <Button onClick={() => setClicks(clicks + 1)} />
    ```
+
+6. Click the `Click Me` button a couple of times and see how the count reacts
+
+## 4. Advanced state management
+
+state can be handled in many ways:
+
+- useState
+- useContext
+- useReducer
+- Redux
+- etc.
+
+In this example, we're going to explore where to best place the state and which state management tool to use best
+
+### useContext
+
+- used to expose state in a given context
+- solution for `prop drilling`
+
+  - passing state from component to component until you reach the component where you want to use that state
+  - example: passing the `count` prop in this manner
+    - \_app.tsx
+    - ```javascript
+      const [count] = useState();
+      return <Component count={count}>
+      ```
+    - index.tsx
+    - ```javascript
+      const Home = ({ count }) => (
+        <Header count={count}>
+      )
+      ```
+    - header.tsx
+    - ```javascript
+      const Header = ({ count }) => (
+        <Content count={count}>
+      )
+      ```
+    - content.tsx
+    - ```javascript
+      const Content = ({ count }) => <p>{count}</p>;
+      ```
+  - instead, we can just do this:
+
+    - \_app.tsx
+    - ```javascript
+      export const CountContext = createContext(0);
+
+      function App() {
+        const [count] = useState();
+
+        return (
+          <CountContext.Provider value={clicks}>
+            <div>
+              <h1>Home</h1>
+              <p>Clicks: {clicks}</p>
+              <Button onClick={() => setClicks(clicks + 1)} />
+            </div>
+          </CountContext.Provider>
+        );
+      }
+      ```
+
+    - content.tsx
+    - ```javascript
+      import { CountContext } from "@/pages";
+      const Content = () => {
+        const count = useContext(CountContext);
+        return <p>{count}</p>;
+      };
+      ```
+
+# Note that everything inside a Context Provider is affected by the state change
+
+### useReducer is a clone of [Redux](https://redux.js.org/)
+
+- state
+- action
+  - type
+  - payload
+
+## 5. Custom hooks
+
+- used to promote logic and state reusability
+- hooks are basically `components` that returns whatever you want
+
+example:
+in `src/hooks/useCount.tsx`
+
+```javascript
+import { useState } from "react";
+
+export const useCount = ({ defaultCount = 0 }: { defaultCount?: number }) => {
+  const [count, setCount] = useState(defaultCount);
+
+  return { count, setCount };
+};
+```
+
+in `src/pages/index.tsx`,
+instead of declaring:
+
+```javascript
+const { clicks, setClicks } = useCount({ defaultCount: 1 });
+```
+
+we can import the `useCount` hook instead
+
+```javascript
+import { useCount } from "@/hooks/useCount";
+
+export default function HOME() {
+  const { clicks, setClicks } = useCount({ defaultCount: 1 });
+```
+
+## 6. Choosing your UI library
+
+Frameworks I've used:
+
+- [Material UI](https://mui.com/)
+  - probably the most famous UI library
+- [Chakra-UI](https://chakra-ui.com/getting-started)
+  - simple and has a [TailwindCSS](https://tailwindcss.com/) like way of adding styles
+- [TailwindCSS](https://tailwindcss.com/)
+  - used to just add classNames of predefined CSS attributes
+
+Things to consider when choosing your UI library
+
+- Mobile-friendly
+- Accessibility
+  - aria-roles
+  - aria-labels
+  - important when unit testing
+- Support
+
+## 7. [Axios](https://axios-http.com/docs/intro)
+
+- HTTP client for node and browser
+
+> Create only 1 axios instance for consistency and just import the created axios instance
+
+```javascript
+const api = axios.create({
+  baseURL: "localhost:3000/api",
+});
+```
+
+## 8. Testing
+
+- [Cypress](https://www.cypress.io/)
+  - more versatile
+- [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
+  - for unit testing
