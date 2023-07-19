@@ -118,6 +118,14 @@ Create a boilerplate using [create-next-app](https://nextjs.org/docs/pages/api-r
 
 ## Exercise 3 - State and Props
 
+### state
+
+- object that triggers a re-render
+
+### props
+
+- basically short for `property`
+
 1. In your Home page file(`src/pages/index.tsx`), create a state to count the number of times a button is clicked
    - place it above the `return` statement
    ```javascript
